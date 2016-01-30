@@ -25,6 +25,7 @@ namespace Assets.Scripts.Rose
         private PhysicsMaterial2D _originalMaterial;
         private float _originalGravity;
         private Vector2 _currentFloorNormal;
+        private float _lastHAxis;
 
         private bool _lastFrameJumpAxis;
         #endregion
@@ -73,11 +74,9 @@ namespace Assets.Scripts.Rose
                 roseRigidBody2d.AddForce(MoveDirection * moveForceMag);
 
             Debug.DrawRay(transform.position, MoveDirection, Color.green);
+            
 
-           
-
-
-            if (horizAxis == 0 && grounded)
+            if ((Mathf.Abs(horizAxis) < _lastHAxis || horizAxis == 0) && grounded)
             {
                 characterBottom.sharedMaterial = stoppingMaterial;
                 characterBottom.enabled = false;
@@ -96,7 +95,9 @@ namespace Assets.Scripts.Rose
             if(Mathf.Abs(vX) > maxV && horizAxis != 0 && grounded)
             {                
                 roseRigidBody2d.velocity = new Vector2(maxV * Mathf.Sign(vX), roseRigidBody2d.velocity.y);
-            }                         
+            }
+
+            _lastHAxis = Mathf.Abs(horizAxis);                   
         }
 
         void OnCollisionEnter2D(Collision2D collision)
