@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace Assets.Scripts.Rose
 {
+    [RequireComponent(typeof(Health))]
     class RoseController : MonoBehaviour
     {
         private const string UseButton = "Use";
@@ -14,6 +15,13 @@ namespace Assets.Scripts.Rose
         #endregion
 
         private bool _isUsePressed;
+        private Health _health;
+
+
+        private void Awake()
+        {
+            _health = GetComponent<Health>();
+        }
 
         private void Update()
         {
@@ -54,6 +62,7 @@ namespace Assets.Scripts.Rose
         {
             flower.PlaySound();
             Destroy(flower.gameObject);
+            _health.HealthPoints += 10.0f;
             // ...
         }
     }
