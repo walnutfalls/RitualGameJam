@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using System.Linq;
+using GameStateManagement;
+using Assets.Scripts.GameStates;
 
 namespace Assets.Scripts.Rose
 {
@@ -13,13 +16,28 @@ namespace Assets.Scripts.Rose
         public RoseAnimationController animationController;
         public CircleCollider2D characterBottom;        
         public PhysicsMaterial2D stoppingMaterial;
+        public float maxHorizontalV = 50.0f;
+        public float maxHorizontalVFlowers = 30.0f;
+        public float moveForceMag = 400.0f;
         #endregion
 
+        #region Private Variables
         private PhysicsMaterial2D _originalMaterial;
+        private float _originalGravity;
+        private Vector2 _currentFloorNormal;
+
+        private bool _lastFrameJumpAxis;
+        #endregion
+
+
+        #region Properties
+        public Vector2 MoveDirection { get; private set; }
+        #endregion
 
         private void Awake()
         {
              _originalMaterial = characterBottom.sharedMaterial;
+            _originalGravity = roseRigidBody2d.gravityScale;
         }
 
 
@@ -28,13 +46,38 @@ namespace Assets.Scripts.Rose
             float horizAxis = Input.GetAxis(Horizontal);
             float vertAxis = Input.GetAxis(Vertical);
 
-            roseRigidBody2d.AddForce(new Vector2(horizAxis, 0) * 20.0f);
+            bool grounded = animationController.IsGrounded;
 
-            if(Input.GetAxis(Jump) > 0 && animationController.IsGrounded)
-                roseRigidBody2d.AddForce(Vector2.up * 200.0f);
+            if (Input.GetAxis(Jump) > 0 && grounded && !_lastFrameJumpAxis)
+            {
+                grounded = false;
+                roseRigidBody2d.AddForce(Vector2.up * 5000.0f);
+                _lastFrameJumpAxis = true;
+            }
+            else if (Input.GetAxis(Jump) == 0 && grounded)
+                _lastFrameJumpAxis = false;
+
+            if (grounded)
+                roseRigidBody2d.gravityScale = _originalGravity * 2;
+            else
+                roseRigidBody2d.gravityScale = _originalGravity;
+
+            // set up move direction
+            if (horizAxis > 0)
+                MoveDirection = new Vector2(_currentFloorNormal.y, -_currentFloorNormal.x).normalized;
+            else if (horizAxis < 0)
+                MoveDirection = new Vector2(-_currentFloorNormal.y, _currentFloorNormal.x).normalized;
+
+            //apply force in move direction
+            if(grounded)
+                roseRigidBody2d.AddForce(MoveDirection * moveForceMag);
+
+            Debug.DrawRay(transform.position, MoveDirection, Color.green);
+
+           
 
 
-            if (horizAxis == 0 && animationController.IsGrounded)
+            if (horizAxis == 0 && grounded)
             {
                 characterBottom.sharedMaterial = stoppingMaterial;
                 characterBottom.enabled = false;
@@ -46,6 +89,28 @@ namespace Assets.Scripts.Rose
                 characterBottom.enabled = false;
                 characterBottom.enabled = true;
             }
+
+            // limit velocity only when grounded
+            float maxV = GameStateManager.Instance.CurrentGameState.Is<FlowerPickingState>() ? maxHorizontalVFlowers : maxHorizontalV;
+            float vX = roseRigidBody2d.velocity.x;
+            if(Mathf.Abs(vX) > maxV && horizAxis != 0 && grounded)
+            {                
+                roseRigidBody2d.velocity = new Vector2(maxV * Mathf.Sign(vX), roseRigidBody2d.velocity.y);
+            }                         
+        }
+
+        void OnCollisionEnter2D(Collision2D collision)
+        {
+            // set current collision normal
+            var points = collision.contacts.Where(c => c.otherCollider == characterBottom);
+            if (!points.Any())
+                _currentFloorNormal = Vector2.zero;
+
+            if (points.Count() == 1)
+                _currentFloorNormal = points.ElementAt(0).normal;
+            else
+                _currentFloorNormal = Vector2.up; // no way to know - multiple collisions.
+            
         }
     }
 }

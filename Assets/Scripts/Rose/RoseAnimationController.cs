@@ -13,6 +13,7 @@ namespace Assets.Scripts.Rose
         public Rigidbody2D characterRigidBody2d;
         public LayerMask ground;
         public Transform groundCheck;
+        public float groundCheckDiam = 1.5f;
         #endregion
 
         #region private
@@ -40,7 +41,9 @@ namespace Assets.Scripts.Rose
 
             _animator.SetFloat(HorizontalSpeedVar, horizontalSpeed);
 
-            IsGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, ground);
+            IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckDiam, ground);
+            Debug.DrawLine(groundCheck.position, groundCheck.position + groundCheckDiam * Vector3.down, Color.red);
+
             _animator.SetBool(GroundedVar, IsGrounded);
         }
     }

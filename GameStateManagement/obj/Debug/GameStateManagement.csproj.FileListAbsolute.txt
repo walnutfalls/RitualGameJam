@@ -1,0 +1,12 @@
+D:\Repositories\AngryBalls\GameStateManagement\bin\Debug\GameStateManagement.dll
+D:\Repositories\AngryBalls\GameStateManagement\bin\Debug\GameStateManagement.pdb
+D:\Repositories\AngryBalls\GameStateManagement\bin\Debug\UnityEngine.dll
+D:\Repositories\AngryBalls\GameStateManagement\bin\Debug\UnityEngine.xml
+D:\Repositories\AngryBalls\Library\ScriptAssemblies\GameStateManagement.dll
+D:\Repositories\AngryBalls\Library\ScriptAssemblies\GameStateManagement.pdb
+D:\Repositories\AngryBalls\Temp\UnityVS_bin\Debug\GameStateManagement.dll
+D:\Repositories\AngryBalls\Temp\UnityVS_bin\Debug\GameStateManagement.pdb
+D:\Repositories\AngryBalls\Assets\GameStateManagement.dll
+D:\Repositories\AngryBalls\Assets\GameStateManagement.pdb
+D:\Repositories\AngryBalls\GameStateManagement\obj\Debug\GameStateManagement.dll
+D:\Repositories\AngryBalls\GameStateManagement\obj\Debug\GameStateManagement.pdb
