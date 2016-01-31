@@ -72,6 +72,7 @@
     <Compile Include="Assets\GameStateManagement\UnitySingleton.cs" />
     <Compile Include="Assets\GateController.cs" />
     <Compile Include="Assets\Scripts\AI\DenialMonster.cs" />
+    <Compile Include="Assets\Scripts\AttackCone.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Extensions\Collision2DExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Assets\Scripts\Rose\RoseController.cs" />
     <Compile Include="Assets\Scripts\Rose\RoseMovementController.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Assets\10 Fantasy Particle Pack\README.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
