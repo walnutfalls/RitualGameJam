@@ -71,6 +71,7 @@
     <Compile Include="Assets\GameStateManagement\PlayerData.cs" />
     <Compile Include="Assets\GameStateManagement\UnitySingleton.cs" />
     <Compile Include="Assets\GateController.cs" />
+    <Compile Include="Assets\Scripts\AI\DenialMonster.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\Extensions\Collision2DExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
