@@ -9,7 +9,7 @@ namespace Assets.Scripts.Rose
         private const string UseButton = "Use";
 
         #region Pickup Readius
-        public float pickupRadius = 4.0f;
+        public float pickupRadius = 8.0f;
         public LayerMask flowers;
 
         #endregion
@@ -55,6 +55,11 @@ namespace Assets.Scripts.Rose
             else
             {
                 _isUsePressed = false;
+            }
+
+            if(Input.GetAxis("Fire1") > 0)
+            {
+                GetComponent<Animator>().SetTrigger("attack");
             }
         }
 

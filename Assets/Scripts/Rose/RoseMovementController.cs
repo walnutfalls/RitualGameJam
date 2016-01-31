@@ -47,13 +47,22 @@ namespace Assets.Scripts.Rose
             float horizAxis = Input.GetAxis(Horizontal);
             float vertAxis = Input.GetAxis(Vertical);
 
+            if (roseRigidBody2d.velocity.x < 0)
+                transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            else if(roseRigidBody2d.velocity.x > 0)
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
+
             bool grounded = animationController.IsGrounded;
+
+
 
             if (Input.GetAxis(Jump) > 0 && grounded && !_lastFrameJumpAxis)
             {
                 grounded = false;
                 roseRigidBody2d.AddForce(Vector2.up * 5000.0f);
                 _lastFrameJumpAxis = true;
+                GetComponent<Animator>().SetTrigger("jumped");
             }
             else if (Input.GetAxis(Jump) == 0 && grounded)
                 _lastFrameJumpAxis = false;
