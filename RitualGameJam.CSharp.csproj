@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.2f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -68,6 +70,7 @@
     <Compile Include="Assets\GameStateManagement\InitialGameState.cs" />
     <Compile Include="Assets\GameStateManagement\PlayerData.cs" />
     <Compile Include="Assets\GameStateManagement\UnitySingleton.cs" />
+    <Compile Include="Assets\RoseDamage.cs" />
     <Compile Include="Assets\Scripts\AI\DenialMonster.cs" />
     <Compile Include="Assets\Scripts\AttackCone.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />

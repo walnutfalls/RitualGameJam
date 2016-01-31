@@ -104,6 +104,7 @@ namespace Assets.Scripts.Rose
             if(Mathf.Abs(vX) > maxV && horizAxis != 0 && grounded)
             {                
                 roseRigidBody2d.velocity = new Vector2(maxV * Mathf.Sign(vX), roseRigidBody2d.velocity.y);
+                GetComponent<Animator>().SetFloat(RoseAnimationController.HorizontalSpeedVar, maxV);
             }
 
             _lastHAxis = Mathf.Abs(horizAxis);                   

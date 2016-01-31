@@ -13,7 +13,8 @@ namespace Assets.Scripts.AI
             Repositioning,
             Hiding,
             Stalking,
-            Showing
+            Showing,
+            Disabled
         }
 
 
@@ -27,6 +28,7 @@ namespace Assets.Scripts.AI
         public GameObject attackCone;
         public float attackTime = 3.0f;
         public int maxRepositions = 3;
+        public Health health;
         #endregion
 
 
@@ -59,6 +61,9 @@ namespace Assets.Scripts.AI
                     case DenialMonsterState.Showing:
                         StartCoroutine(Show());
                         break;
+                    case DenialMonsterState.Disabled:
+                        StartCoroutine(Disabled());
+                        break;
                     default: break;
                 }
             }
@@ -75,11 +80,24 @@ namespace Assets.Scripts.AI
         private void Start()
         {
             State = DenialMonsterState.Stalking;
+            health.EntityKilledListeners += () =>
+            {
+                Destroy(gameObject);
+            };
         }
 
+       
               
 
         #region Coroutines
+        IEnumerator Disabled()
+        {
+            GetComponent<Rigidbody2D>().gravityScale = 1;
+            yield return new WaitForSeconds(1.0f);
+            GetComponent<Rigidbody2D>().gravityScale = 0;
+            State = DenialMonsterState.Hiding;
+        }
+
         IEnumerator Attack()
         {
             _repositionsSoFar++;
@@ -102,7 +120,7 @@ namespace Assets.Scripts.AI
 
                 attackCone.SetActive(true);
 
-                while (timeElapsed < attackTime)
+                while (timeElapsed < attackTime && State == DenialMonsterState.Attacking)
                 {
                     float dt = Time.time - lastTime;
                     lastTime = Time.time;
@@ -179,17 +197,20 @@ namespace Assets.Scripts.AI
             animator.SetBool("IsLooking", false);
             yield return new WaitForSeconds(1.25f);
 
-            animator.SetBool("Visible", false);
-            yield return new WaitForSeconds(1.25f);          
-            
+            if (State == DenialMonsterState.Hiding)
+            {
+                animator.SetBool("Visible", false);
+                yield return new WaitForSeconds(1.25f);
 
-            float x = Random.Range(_rose.transform.position.x - 100.0f, _rose.transform.position.x + 100.0f);
-            float y = 100.0f;
-            transform.position = new Vector3(x, y, transform.position.z);
 
-            yield return new WaitForSeconds(2.25f);
+                float x = Random.Range(_rose.transform.position.x - 100.0f, _rose.transform.position.x + 100.0f);
+                float y = 100.0f;
+                transform.position = new Vector3(x, y, transform.position.z);
 
-            State = DenialMonsterState.Stalking;
+                yield return new WaitForSeconds(2.25f);
+
+                State = DenialMonsterState.Stalking;
+            }
         }
 
         IEnumerator Stalk()
@@ -201,7 +222,7 @@ namespace Assets.Scripts.AI
 
             var mag = stalkDistance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
 
-            while (Vector2.Distance(transform.position, _rose.transform.position) > mag + 5.0f)
+            while (Vector2.Distance(transform.position, _rose.transform.position) > mag + 5.0f && State == DenialMonsterState.Stalking)
             {                
                 Vector2 targ = (Vector2)_rose.transform.position + ran * mag;
                 Vector2 vel = (targ - (Vector2)transform.position).normalized * moveSpeed;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections;
 
 namespace Assets.Scripts.Rose
 {
@@ -11,16 +12,19 @@ namespace Assets.Scripts.Rose
         #region Pickup Readius
         public float pickupRadius = 8.0f;
         public LayerMask flowers;
-
+        public float attackCooldown = 1.0f;
+        public GameObject damage;
         #endregion
 
         private bool _isUsePressed;
         private Health _health;
+        private bool _canAttack;
 
 
         private void Awake()
         {
             _health = GetComponent<Health>();
+            _canAttack = true;
         }
 
         private void Update()
@@ -57,9 +61,11 @@ namespace Assets.Scripts.Rose
                 _isUsePressed = false;
             }
 
-            if(Input.GetAxis("Fire1") > 0)
+            if(Input.GetAxis("Fire1") > 0 && _canAttack)
             {
                 GetComponent<Animator>().SetTrigger("attack");
+                damage.SetActive(true);
+                StartCoroutine(AttackCooldown());
             }
         }
 
@@ -69,6 +75,14 @@ namespace Assets.Scripts.Rose
             Destroy(flower.gameObject);
             _health.HealthPoints += 10.0f;
             // ...
+        }
+
+        IEnumerator AttackCooldown()
+        {
+            _canAttack = false;
+            yield return new WaitForSeconds(attackCooldown);
+            damage.SetActive(false);
+            _canAttack = true;
         }
     }
 }

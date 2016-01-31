@@ -5,7 +5,7 @@ namespace Assets.Scripts.Rose
     [RequireComponent(typeof(Animator))]
     public class RoseAnimationController : MonoBehaviour
     {
-        private const string HorizontalSpeedVar = "horizontalSpeed";
+        public const string HorizontalSpeedVar = "horizontalSpeed";
         private const string VerticalSpeedVar = "verticalSpeed";
         private const string GroundedVar = "grounded";
 
@@ -13,7 +13,7 @@ namespace Assets.Scripts.Rose
         public Rigidbody2D characterRigidBody2d;
         public LayerMask ground;
         public Transform groundCheck;
-        public float groundCheckDiam = 1.5f;
+        public float groundCheckDiam = 3f;
         #endregion
 
         #region private
@@ -39,6 +39,7 @@ namespace Assets.Scripts.Rose
             float horizontalSpeed = Mathf.Abs(vel.x);
             float verticalSpeed = Mathf.Abs(vel.y);
 
+            
             _animator.SetFloat(HorizontalSpeedVar, horizontalSpeed);
 
             IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckDiam, ground);
