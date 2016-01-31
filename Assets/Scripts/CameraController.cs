@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.GameStates;
+using System.Collections;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -19,6 +21,14 @@ namespace Assets.Scripts
             _originalZ = transform.position.z;
         }
 
+        private void Start()
+        {
+            FightingState.Instance.OnEnter += () =>
+            {
+                targetCharPos.GetComponent<Animator>().SetTrigger("Shift");                
+            };
+        }
+
         private void Update()
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(targetCharPos.position);
@@ -27,6 +37,12 @@ namespace Assets.Scripts
             Vector2 camCen = pos + toCenter + toChar;
 
             transform.position = new Vector3(camCen.x, camCen.y, _originalZ);
+        }
+
+        IEnumerator ShangeSize()
+        {
+            yield return new WaitForSeconds(2.0f);
+            _thisCamera.orthographicSize += 2;
         }
     }
 }

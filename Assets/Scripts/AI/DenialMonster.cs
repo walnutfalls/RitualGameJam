@@ -23,6 +23,7 @@ namespace Assets.Scripts.AI
         public float stalkDistance = 7.0f;
         public float stalkDIstanceVariance = 3.0f;
         public float moveSpeed = 5.0f;
+        public float repositionMoveSpeed = 15.0f;
         public GameObject attackCone;
         public float attackTime = 3.0f;
         public int maxRepositions = 3;
@@ -90,17 +91,18 @@ namespace Assets.Scripts.AI
             }
             else
             {
-                _rigidBody2D.velocity = Vector2.zero;              
-
                 attackCone.transform.MatchUpVector((_rose.transform.position - particleSystem.transform.position).normalized);
-                attackCone.SetActive(true);
-
 
                 float startTime = Time.time;
                 float lastTime = startTime;
                 float timeElapsed = 0;
 
-                while(timeElapsed < attackTime)
+                animator.SetBool("IsLooking", true);
+                yield return new WaitForSeconds(0.2f);
+
+                attackCone.SetActive(true);
+
+                while (timeElapsed < attackTime)
                 {
                     float dt = Time.time - lastTime;
                     lastTime = Time.time;
@@ -110,8 +112,12 @@ namespace Assets.Scripts.AI
                     attackCone.transform.MatchUpVector((_rose.transform.position - particleSystem.transform.position).normalized);
                     yield return null;
                 }
-               
                 attackCone.SetActive(false);
+
+                animator.SetBool("IsLooking", false);
+                yield return new WaitForSeconds(0.2f);
+
+                
 
                 State = DenialMonsterState.Repositioning;
             }
@@ -127,27 +133,38 @@ namespace Assets.Scripts.AI
 
             float x = Random.Range(-1, 1);
             Vector2 ran = new Vector2(x, 1.0f);
-
             var mag = stalkDistance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
+            Vector2 targ = (Vector2)_rose.transform.position + ran * mag;
+
             float startTime = Time.time;
             float lastTime = startTime;
             float timeElapsed = 0;
 
-            Vector2 targ = (Vector2)_rose.transform.position + ran * mag;
+            
 
-            while (State == DenialMonsterState.Repositioning && timeElapsed < 5.0f && Vector2.Distance(transform.position, targ) > 0.5f)
+            while (State == DenialMonsterState.Repositioning && timeElapsed < 5.0f)
             {
                 float dt = Time.time - lastTime;
                 timeElapsed += dt;
                 lastTime = Time.time;
 
                 targ = (Vector2)_rose.transform.position + ran * mag;
-                Vector2 vel = (targ - (Vector2)transform.position).normalized * moveSpeed;
+                Vector2 vel = (targ - (Vector2)transform.position).normalized * repositionMoveSpeed;
 
                 _rigidBody2D.velocity = vel;
 
+                if(Vector2.Distance(transform.position, targ) < 0.5f)
+                {
+                    x = Random.Range(-1, 1);
+                    ran = new Vector2(x, 1.0f);
+                    mag = stalkDistance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
+                    targ = (Vector2)_rose.transform.position + ran * mag;
+                }
+
                 yield return null;
             }
+
+            _rigidBody2D.velocity = Vector2.zero;
                         
             State = DenialMonsterState.Attacking;
         }
@@ -167,7 +184,7 @@ namespace Assets.Scripts.AI
             
 
             float x = Random.Range(_rose.transform.position.x - 100.0f, _rose.transform.position.x + 100.0f);
-            float y = 200.0f;
+            float y = 100.0f;
             transform.position = new Vector3(x, y, transform.position.z);
 
             yield return new WaitForSeconds(2.25f);
@@ -208,9 +225,6 @@ namespace Assets.Scripts.AI
             particleSystem.Play(true);
 
             animator.SetBool("Visible", true);
-            yield return new WaitForSeconds(1.25f);
-
-            animator.SetBool("IsLooking", true);
             yield return new WaitForSeconds(1.25f);
 
             State = DenialMonsterState.Attacking;

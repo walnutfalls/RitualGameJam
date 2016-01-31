@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(AudioSource))]
     public class GateController : MonoBehaviour
     {
         #region Editor Variables
@@ -13,10 +14,12 @@ namespace Assets.Scripts
         #endregion
 
         private Animator _animator;
+        private AudioSource _audioSource;
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         void OnTriggerEnter2D(Collider2D coll)
@@ -33,6 +36,8 @@ namespace Assets.Scripts
         {
             yield return new WaitForSeconds(2.0f);
             GameStateManager.Instance.TransitionToGameState<FightingState>();
+            GetComponent<BoxCollider2D>().enabled = false;
+            _audioSource.Play();
         }
     }
 }

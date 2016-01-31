@@ -23,14 +23,14 @@ namespace Assets.Scripts
             }
         }
 
-        public void OnEnable()
-        {
-            particleSystem.Play(true);  
-        }
+        //public void OnEnable()
+        //{
+        //    particleSystem.Play(true);  
+        //}
 
-        public void OnDisable()
-        {
-            particleSystem.Stop(true);
-        }
+        //public void OnDisable()
+        //{
+        //    particleSystem.Stop(true);
+        //}
     }
 }
