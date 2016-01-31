@@ -25,11 +25,13 @@ namespace Assets.Scripts.AI
         public float moveSpeed = 5.0f;
         public GameObject attackCone;
         public float attackTime = 3.0f;
+        public int maxRepositions = 3;
         #endregion
 
 
         private RoseController _rose;
         private Rigidbody2D _rigidBody2D;
+        private int _repositionsSoFar;
 
         #region Properties
         private DenialMonsterState _state;
@@ -79,60 +81,108 @@ namespace Assets.Scripts.AI
         #region Coroutines
         IEnumerator Attack()
         {
-            _rigidBody2D.velocity = Vector2.zero;
-            attackCone.SetActive(true);
+            _repositionsSoFar++;
 
-            attackCone.transform.MatchUpVector((_rose.transform.position - transform.position).normalized);
-            yield return new WaitForSeconds(attackTime);
-            attackCone.SetActive(false);
+            if (_repositionsSoFar > maxRepositions)
+            {
+                _repositionsSoFar = 0;
+                State = DenialMonsterState.Hiding;
+            }
+            else
+            {
+                _rigidBody2D.velocity = Vector2.zero;              
 
-            State = DenialMonsterState.Repositioning;
+                attackCone.transform.MatchUpVector((_rose.transform.position - particleSystem.transform.position).normalized);
+                attackCone.SetActive(true);
+
+
+                float startTime = Time.time;
+                float lastTime = startTime;
+                float timeElapsed = 0;
+
+                while(timeElapsed < attackTime)
+                {
+                    float dt = Time.time - lastTime;
+                    lastTime = Time.time;
+                    timeElapsed += dt;
+
+
+                    attackCone.transform.MatchUpVector((_rose.transform.position - particleSystem.transform.position).normalized);
+                    yield return null;
+                }
+               
+                attackCone.SetActive(false);
+
+                State = DenialMonsterState.Repositioning;
+            }
         }
 
         IEnumerator Reposition()
         {
+            if (_repositionsSoFar > maxRepositions)
+            {
+                _repositionsSoFar = 0;
+                State = DenialMonsterState.Hiding;
+            }
+
             float x = Random.Range(-1, 1);
             Vector2 ran = new Vector2(x, 1.0f);
 
-            var mag = stalkDIstanceVariance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
+            var mag = stalkDistance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
             float startTime = Time.time;
             float lastTime = startTime;
             float timeElapsed = 0;
 
-            while (timeElapsed < 2.0f && Vector2.Distance(transform.position, _rose.transform.position) > mag + 5.0f)
+            Vector2 targ = (Vector2)_rose.transform.position + ran * mag;
+
+            while (State == DenialMonsterState.Repositioning && timeElapsed < 5.0f && Vector2.Distance(transform.position, targ) > 0.5f)
             {
                 float dt = Time.time - lastTime;
                 timeElapsed += dt;
-                lastTime = Time.time; 
+                lastTime = Time.time;
 
-
-                Vector2 targ = (Vector2)_rose.transform.position + ran * mag;
+                targ = (Vector2)_rose.transform.position + ran * mag;
                 Vector2 vel = (targ - (Vector2)transform.position).normalized * moveSpeed;
 
                 _rigidBody2D.velocity = vel;
 
                 yield return null;
             }
-
+                        
             State = DenialMonsterState.Attacking;
         }
 
         IEnumerator Hide()
         {
-            // play fadeout animation
-            animator.SetBool("Visible", false);
-            yield return new WaitForSeconds(1.25f);
-            particleSystem.gameObject.SetActive(true);
             particleSystem.Stop(true);
+            particleSystem.gameObject.SetActive(false);
+            attackCone.SetActive(false);
+
+
+            animator.SetBool("IsLooking", false);
+            yield return new WaitForSeconds(1.25f);
+
+            animator.SetBool("Visible", false);
+            yield return new WaitForSeconds(1.25f);          
+            
+
+            float x = Random.Range(_rose.transform.position.x - 100.0f, _rose.transform.position.x + 100.0f);
+            float y = 200.0f;
+            transform.position = new Vector3(x, y, transform.position.z);
+
+            yield return new WaitForSeconds(2.25f);
+
             State = DenialMonsterState.Stalking;
         }
 
         IEnumerator Stalk()
         {
+            attackCone.SetActive(false);
+
             float x = Random.Range(-1, 1);
             Vector2 ran = new Vector2(x, 1.0f);
 
-            var mag = stalkDIstanceVariance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
+            var mag = stalkDistance + Random.Range(-stalkDIstanceVariance / 2, stalkDIstanceVariance / 2); //TODO: optimize
 
             while (Vector2.Distance(transform.position, _rose.transform.position) > mag + 5.0f)
             {                
@@ -147,15 +197,22 @@ namespace Assets.Scripts.AI
                 yield return null;                
             }
 
+            _rigidBody2D.velocity = Vector2.zero;
+
             State = DenialMonsterState.Showing;
         }
 
         IEnumerator Show()
         {
-            animator.SetBool("Visible", true);
-            yield return new WaitForSeconds(1.25f);
             particleSystem.gameObject.SetActive(true);
             particleSystem.Play(true);
+
+            animator.SetBool("Visible", true);
+            yield return new WaitForSeconds(1.25f);
+
+            animator.SetBool("IsLooking", true);
+            yield return new WaitForSeconds(1.25f);
+
             State = DenialMonsterState.Attacking;
         }
         #endregion

@@ -70,10 +70,10 @@
     <Compile Include="Assets\GameStateManagement\InitialGameState.cs" />
     <Compile Include="Assets\GameStateManagement\PlayerData.cs" />
     <Compile Include="Assets\GameStateManagement\UnitySingleton.cs" />
-    <Compile Include="Assets\GateController.cs" />
     <Compile Include="Assets\Scripts\AI\DenialMonster.cs" />
     <Compile Include="Assets\Scripts\AttackCone.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Extensions\Collision2DExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RectTransformExtensions.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GameStates\FightingState.cs" />
     <Compile Include="Assets\Scripts\GameStates\FlowerPickingState.cs" />
+    <Compile Include="Assets\Scripts\GateController.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\HealthBarDisplay.cs" />
     <Compile Include="Assets\Scripts\Math.cs" />

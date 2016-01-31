@@ -58,6 +58,7 @@ namespace GameStateManagement
             
             CurrentGameState = GameStateBase<TGameState>.Instance;
             CurrentGameState.EnterState();
+            CurrentGameState.StateStaticInitialize();
 
             _gameStateStack.Push(CurrentGameState);            
         }

@@ -2,6 +2,8 @@
 {
     public interface IGameState
     {
+        void StateStaticInitialize();
+
         /// <summary>
         /// Methods for determining if state is paused.
         /// </summary>

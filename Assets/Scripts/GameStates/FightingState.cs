@@ -1,5 +1,6 @@
 ﻿using System;
 using GameStateManagement;
+using UnityEngine;
 
 namespace Assets.Scripts.GameStates
 {
@@ -7,7 +8,7 @@ namespace Assets.Scripts.GameStates
     {
         public override void StateStaticInitialize()
         {
-
+            Camera.main.orthographicSize += 2;
         }
     }
 }

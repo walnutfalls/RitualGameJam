@@ -3,7 +3,7 @@ using GameStateManagement;
 using System.Collections;
 using UnityEngine;
 
-namespace Assets
+namespace Assets.Scripts
 {
     [RequireComponent(typeof(Animator))]
     public class GateController : MonoBehaviour
