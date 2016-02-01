@@ -25,6 +25,11 @@ namespace Assets.Scripts.Rose
         {
             _health = GetComponent<Health>();
             _canAttack = true;
+
+            _health.EntityKilledListeners += () =>
+            {
+                Application.LoadLevel(0);
+            };
         }
 
         private void Update()

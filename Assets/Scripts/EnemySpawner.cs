@@ -10,28 +10,31 @@ namespace Assets.Scripts
         private bool _switchedToFighting;
         private bool _switchedToNonFighting;
 
-        void Update()
-        {
-            if(GameStateManager.Instance.CurrentGameState.Is<FightingState>() && !_switchedToFighting)
-            {
-                _switchedToFighting = true;
-                _switchedToNonFighting = false;
+        private bool _startedSpawining;
 
-                StartCoroutine(SpawnEnemies());
-            }
-            else if(!GameStateManager.Instance.CurrentGameState.Is<FightingState>() && !_switchedToNonFighting)
-            {
-                _switchedToFighting = false;
-                _switchedToNonFighting = true;
-                StopCoroutine(SpawnEnemies());
-            }
+        public GameObject denial;
+
+       void Start()
+        {
+            _startedSpawining = false;
+
+            FightingState.Instance.OnEnter += () => {
+                if(!_startedSpawining)
+                    StartCoroutine(SpawnGuys(5));
+
+                _startedSpawining = true;
+            };
         }
 
-        IEnumerator SpawnEnemies()
+        IEnumerator SpawnGuys(int num)
         {
-            while(!_switchedToNonFighting)
+            WaitForSeconds wait = new WaitForSeconds(5.0f);
+
+            while(num > 0)
             {
-                yield return new WaitForSeconds(1.0f);
+                Instantiate(denial).transform.position = transform.position; ;
+                num--;
+                yield return wait;
             }
         }
     }

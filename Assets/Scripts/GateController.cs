@@ -11,10 +11,12 @@ namespace Assets.Scripts
     {
         #region Editor Variables
         public GameObject InvisibleWall;
+        
         #endregion
 
         private Animator _animator;
         private AudioSource _audioSource;
+
 
         private void Awake()
         {

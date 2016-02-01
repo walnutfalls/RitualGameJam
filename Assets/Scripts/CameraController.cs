@@ -10,6 +10,8 @@ namespace Assets.Scripts
         #region Editor Variables
         public Transform rose;
         public RectTransform targetCharPos;
+        public Transform leftWall;
+        public Transform rightWall;
         #endregion
 
         private Camera _thisCamera;
@@ -25,7 +27,8 @@ namespace Assets.Scripts
         {
             FightingState.Instance.OnEnter += () =>
             {
-                targetCharPos.GetComponent<Animator>().SetTrigger("Shift");                
+                targetCharPos.GetComponent<Animator>().SetTrigger("Shift");
+                GetComponent<Animator>().SetTrigger("zoomOut");
             };
         }
 
@@ -37,12 +40,6 @@ namespace Assets.Scripts
             Vector2 camCen = pos + toCenter + toChar;
 
             transform.position = new Vector3(camCen.x, camCen.y, _originalZ);
-        }
-
-        IEnumerator ShangeSize()
-        {
-            yield return new WaitForSeconds(2.0f);
-            _thisCamera.orthographicSize += 2;
-        }
+        }     
     }
 }
