@@ -12,8 +12,7 @@ namespace Assets
         {
             if (other.gameObject.layer == 9)
             {
-                other.gameObject.GetComponent<Health>().HealthPoints -= damage;
-                other.transform.parent.gameObject.GetComponent<Rigidbody2D>().AddForce((other.transform.position - transform.position) * 200.0f);
+                other.gameObject.GetComponent<Health>().HealthPoints -= damage;                
                 other.transform.parent.GetComponent<DenialMonster>().State = DenialMonster.DenialMonsterState.Disabled;
                 gameObject.SetActive(false);
             }

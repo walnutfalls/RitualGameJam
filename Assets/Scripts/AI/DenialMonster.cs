@@ -250,6 +250,9 @@ namespace Assets.Scripts.AI
 
             State = DenialMonsterState.Attacking;
         }
+
+
+     
         #endregion
     }
 }
