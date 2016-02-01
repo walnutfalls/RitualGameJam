@@ -3,19 +3,37 @@ using UnityEngine;
 
 namespace Assets
 {
-    [RequireComponent(typeof(CircleCollider2D))]
     public class RoseDamage : MonoBehaviour
     {
         public float damage = 50.0f;
+        public float radius = 10.0f;
+        public LayerMask enemies;
+        public ParticleSystem effect;
 
-        void OnTriggerEnter2D(Collider2D other)
+        private void OnEnable()
         {
-            if (other.gameObject.layer == 9)
+            effect.time = 0;
+            effect.Play(true);
+
+            var targets = Physics2D.OverlapCircleAll(transform.position, radius, enemies);
+
+            Debug.DrawLine(transform.position, radius * Vector2.right + (Vector2)transform.position, Color.red, 3.0f);
+            Debug.DrawLine(transform.position, radius * Vector2.up + (Vector2)transform.position, Color.red, 3.0f);
+            Debug.DrawLine(transform.position, radius * Vector2.left + (Vector2)transform.position, Color.red, 3.0f);
+            Debug.DrawLine(transform.position, radius * Vector2.down + (Vector2)transform.position, Color.red, 3.0f);
+
+            foreach (var t in targets)
             {
-                other.gameObject.GetComponent<Health>().HealthPoints -= damage;                
-                other.transform.parent.GetComponent<DenialMonster>().State = DenialMonster.DenialMonsterState.Disabled;
-                gameObject.SetActive(false);
+                t.GetComponent<Health>().HealthPoints -= damage;
+                t.transform.parent.GetComponent<DenialMonster>().State = DenialMonster.DenialMonsterState.Disabled;                
             }
         }
+
+        private void OnDisable()
+        {
+            
+        }
+
+        
     }
 }

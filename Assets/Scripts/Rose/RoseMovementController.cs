@@ -47,9 +47,9 @@ namespace Assets.Scripts.Rose
             float horizAxis = Input.GetAxis(Horizontal);
             float vertAxis = Input.GetAxis(Vertical);
 
-            if (roseRigidBody2d.velocity.x < 0)
+            if (roseRigidBody2d.velocity.x < 1)
                 transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-            else if(roseRigidBody2d.velocity.x > 0)
+            else if(roseRigidBody2d.velocity.x > 1)
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
 
 
@@ -112,6 +112,8 @@ namespace Assets.Scripts.Rose
 
         void OnCollisionEnter2D(Collision2D collision)
         {
+            if (collision.gameObject.layer != 12) return;
+
             // set current collision normal
             var points = collision.contacts.Where(c => c.otherCollider == characterBottom);
             if (!points.Any())

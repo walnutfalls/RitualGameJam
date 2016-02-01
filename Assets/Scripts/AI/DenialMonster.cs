@@ -133,7 +133,7 @@ namespace Assets.Scripts.AI
                 attackCone.SetActive(false);
 
                 animator.SetBool("IsLooking", false);
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(2.0f);
 
                 
 
