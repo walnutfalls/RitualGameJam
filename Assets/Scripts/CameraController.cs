@@ -40,6 +40,22 @@ namespace Assets.Scripts
             Vector2 camCen = pos + toCenter + toChar;
 
             transform.position = new Vector3(camCen.x, camCen.y, _originalZ);
-        }     
+
+            float halfWidth = _thisCamera.orthographicSize * _thisCamera.aspect;
+
+            float cameraWordLeft = _thisCamera.transform.position.x - halfWidth;
+            float cameraWorldRight = _thisCamera.transform.position.x + halfWidth;
+
+            if (cameraWordLeft < leftWall.transform.position.x)
+                _thisCamera.transform.position = new Vector3(leftWall.transform.position.x + halfWidth,
+                    _thisCamera.transform.position.y,
+                    _thisCamera.transform.position.z);
+
+            if(cameraWorldRight > rightWall.transform.position.x)
+                _thisCamera.transform.position = new Vector3(rightWall.transform.position.x - halfWidth,
+                    _thisCamera.transform.position.y,
+                    _thisCamera.transform.position.z);
+
+        }
     }
 }
