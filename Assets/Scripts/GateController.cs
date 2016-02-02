@@ -31,6 +31,7 @@ namespace Assets.Scripts
                 _animator.SetTrigger("Close");
                 InvisibleWall.SetActive(true);
                 StartCoroutine(TransitionGameState());
+                GetComponent<BoxCollider2D>().enabled = false;
             }
         }
 

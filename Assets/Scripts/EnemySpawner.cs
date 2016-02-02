@@ -7,22 +7,13 @@ namespace Assets.Scripts
 {
     public class EnemySpawner : MonoBehaviour
     {
-        private bool _switchedToFighting;
-        private bool _switchedToNonFighting;
-
-        private bool _startedSpawining;
-
         public GameObject denial;
 
-       void Start()
+        void Start()
         {
-            _startedSpawining = false;
-
-            FightingState.Instance.OnEnter += () => {
-                if(!_startedSpawining)
-                    StartCoroutine(SpawnGuys(5));
-
-                _startedSpawining = true;
+            FightingState.Instance.OnEnter += () =>
+            {
+                StartCoroutine(SpawnGuys(5));
             };
         }
 
@@ -30,7 +21,7 @@ namespace Assets.Scripts
         {
             WaitForSeconds wait = new WaitForSeconds(5.0f);
 
-            while(num > 0)
+            while (num > 0)
             {
                 Instantiate(denial).transform.position = transform.position; ;
                 num--;
