@@ -74,9 +74,9 @@ namespace Assets.Scripts.Rose
 
             // set up move direction
             if (horizAxis > 0)
-                MoveDirection = new Vector2(_currentFloorNormal.y, -_currentFloorNormal.x).normalized;
+                MoveDirection = new Vector2(_currentFloorNormal.y, -_currentFloorNormal.x).normalized * horizAxis;
             else if (horizAxis < 0)
-                MoveDirection = new Vector2(-_currentFloorNormal.y, _currentFloorNormal.x).normalized;
+                MoveDirection = new Vector2(-_currentFloorNormal.y, _currentFloorNormal.x).normalized * -horizAxis;
 
             //apply force in move direction
             if(grounded)
