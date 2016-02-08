@@ -13,7 +13,7 @@ namespace Assets.Scripts.Rose
         public float pickupRadius = 8.0f;
         public LayerMask flowers;
         public float attackCooldown = 1.0f;
-        public GameObject damage;
+        public RoseDamage damage;
         #endregion
 
         private bool _isUsePressed;
@@ -69,7 +69,7 @@ namespace Assets.Scripts.Rose
             if(Input.GetAxis("Fire1") > 0 && _canAttack)
             {
                 GetComponent<Animator>().SetTrigger("attack");
-                damage.SetActive(true);
+                damage.Attack();
                 StartCoroutine(AttackCooldown());
             }
         }
@@ -85,8 +85,7 @@ namespace Assets.Scripts.Rose
         IEnumerator AttackCooldown()
         {
             _canAttack = false;
-            yield return new WaitForSeconds(attackCooldown);
-            damage.SetActive(false);
+            yield return new WaitForSeconds(attackCooldown);            
             _canAttack = true;
         }
     }

@@ -25,11 +25,18 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            FightingState.Instance.OnEnter += () =>
-            {
-                targetCharPos.GetComponent<Animator>().SetTrigger("Shift");
-                GetComponent<Animator>().SetTrigger("zoomOut");
-            };
+            FightingState.Instance.OnEnter += OnFightingEnter;
+        }
+
+        private void OnDestroy()
+        {
+            FightingState.Instance.OnEnter -= OnFightingEnter;
+        }
+
+        private void OnFightingEnter()
+        {
+            targetCharPos.GetComponent<Animator>().SetTrigger("Shift");
+            GetComponent<Animator>().SetTrigger("zoomOut");
         }
 
         private void Update()

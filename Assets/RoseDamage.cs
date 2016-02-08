@@ -9,11 +9,10 @@ namespace Assets
         public float radius = 10.0f;
         public LayerMask enemies;
         public ParticleSystem effect;
-
-        private void OnEnable()
+      
+        public void Attack()
         {
-            effect.time = 0;
-            effect.Play(true);
+            effect.Emit(20);
 
             var targets = Physics2D.OverlapCircleAll(transform.position, radius, enemies);
 
@@ -25,15 +24,8 @@ namespace Assets
             foreach (var t in targets)
             {
                 t.GetComponent<Health>().HealthPoints -= damage;
-                t.transform.parent.GetComponent<DenialMonster>().State = DenialMonster.DenialMonsterState.Disabled;                
+                t.transform.parent.GetComponent<DenialMonster>().State = DenialMonster.DenialMonsterState.Disabled;
             }
-        }
-
-        private void OnDisable()
-        {
-            
-        }
-
-        
+        }       
     }
 }

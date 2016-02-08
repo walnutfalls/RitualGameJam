@@ -3,6 +3,7 @@ using System.Collections;
 namespace Assets.Scripts.Rose
 {
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(RoseMovementController))]
     public class RoseAnimationController : MonoBehaviour
     {
         public const string HorizontalSpeedVar = "horizontalSpeed";
@@ -10,14 +11,12 @@ namespace Assets.Scripts.Rose
         private const string GroundedVar = "grounded";
 
         #region Editor Variables
-        public Rigidbody2D characterRigidBody2d;
-        public LayerMask ground;
-        public Transform groundCheck;
-        public float groundCheckDiam = 3f;
+        public Rigidbody2D characterRigidBody2d;                
         #endregion
 
         #region private
         private Animator _animator;
+        private RoseMovementController _movementController;
         #endregion
 
         #region Properties
@@ -26,7 +25,8 @@ namespace Assets.Scripts.Rose
 
         private void Awake()
         {
-            _animator = GetComponent<Animator>();            
+            _animator = GetComponent<Animator>();
+            _movementController = GetComponent<RoseMovementController>();
         }
             
        
@@ -41,11 +41,8 @@ namespace Assets.Scripts.Rose
 
             
             _animator.SetFloat(HorizontalSpeedVar, horizontalSpeed);
-
-            IsGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckDiam, ground);
-            Debug.DrawLine(groundCheck.position, groundCheck.position + groundCheckDiam * Vector3.down, Color.red);
-
-            _animator.SetBool(GroundedVar, IsGrounded);
+            _animator.SetFloat(VerticalSpeedVar, verticalSpeed);
+            _animator.SetBool(GroundedVar, _movementController.IsGrounded);
         }
     }
 }

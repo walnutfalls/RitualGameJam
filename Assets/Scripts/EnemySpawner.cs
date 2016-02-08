@@ -11,10 +11,17 @@ namespace Assets.Scripts
 
         void Start()
         {
-            FightingState.Instance.OnEnter += () =>
-            {
-                StartCoroutine(SpawnGuys(5));
-            };
+            FightingState.Instance.OnEnter += OnFightingEnter;
+        }
+
+        void OnDestroy()
+        {
+            FightingState.Instance.OnEnter -= OnFightingEnter;
+        }
+
+        private void OnFightingEnter()
+        {
+            StartCoroutine(SpawnGuys(5));
         }
 
         IEnumerator SpawnGuys(int num)

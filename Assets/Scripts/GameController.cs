@@ -13,12 +13,17 @@ namespace Assets.Scripts
         {
             GameStateManagement.GameStateManager.Instance.TransitionToGameState<FlowerPickingState>();
 
+            FightingState.Instance.OnEnter += OnFightingStateEnter;
+        }
 
+        void OnDestroy()
+        {
+            FightingState.Instance.OnEnter -= OnFightingStateEnter;
+        }
 
-            FightingState.Instance.OnEnter += () =>
-            {
-                GetComponent<AudioSource>().Stop();
-            };
+        private void OnFightingStateEnter()
+        {
+            GetComponent<AudioSource>().Stop();
         }
     }
 }
